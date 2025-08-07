@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css_js_path %}
+{% endblock %}
+
+{% block title %}Create Organization{% endblock %}
+
+{% block content %}
+<div class="p-3 mx-auto text-start">
+    <h1 class="display-4 fw-normal text-body-emphasis">
+        Create Organization
+    </h1>
+    <p class="lead my-2">
+        組織と管理者アカウントを作成します。
+        管理者アカウントは、メンバーアカウントの作成やプランの変更など組織の管理を行うためのアカウントです。
+    </p>
+</div>
+<div class="px-2">
+    <form action="{% url 'app_account:signup' %}" 
+        method="post" class="px-3 prevent-double-click-form row lh-lg" >
+        {% csrf_token %}
+
+        <div class="mb-3 col-12 col-md-6 order-md-last">
+            <hr class="my-4">
+
+            <h3 class="mb-3 fw-bold">
+                組織情報
+            </h3>
+
+            <div class="mb-3">
+                {% for field in organization_form %}
+                <div class="mb-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% for error in field.errors %}
+                    <div class="text-danger small px-3">エラー：{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-3 col-12 col-md-6">
+            <hr class="my-4">
+            <h3 class="mb-3 fw-bold">
+                管理アカウント
+            </h3>
+
+            <div class="mb-3">
+                {% for field in account_form %}
+                <div class="mb-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% for error in field.errors %}
+                    <div class="text-danger small px-3">エラー：{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- 利用規約 -->
+            <div class="my-4">
+                <div class="d-flex align-items-center">
+                    <!-- チェックボックス -->
+                    <input class="form-check-input mx-2 prevent-forms-submit-enter" type="checkbox" value="agree"
+                        id="bf_terms_agreement" name="terms_agreement" 
+                        style="transform: scale(1.4);min-width: 18px"/>
+                    <!-- チェックボックスラベル -->
+                    <label class="px-2 form-check-label text-dark text-break" for="bf_terms_agreement">
+                        <a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover fw-bold text-break"
+                            href="">
+                            利用規約・個人情報保護方針
+                        </a>
+                        に同意する
+                    </label>
+                </div>
+            </div>
+
+            <hr class="my-4 py-2">
+
+            <button class="w-100 btn btn-primary btn-lg  prevent-double-click-button" 
+                onclick="return window.confirm('アカウントIDは「組織ID」と「入力内容」に基づいて自動生成されます。');" type="submit" >
+                Create Organization
+            </button>
+        </div>
+    </form>
+</div>
+<div class="my-4 py-4"></div>
+{% endblock %}

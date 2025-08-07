@@ -1,0 +1,188 @@
+<!-- ------------------------ -->
+<!-- 概要：プロファイル初期セットアップフォームHTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+    Profile Setup
+{% endblock %}
+
+{% block css_js_path %}
+{% endblock %}
+
+{% block content %}
+<form method="post" class="prevent-double-click-form lh-lg m-0 p-0 w-100" action="{% url 'app_profile:setup' %}">
+    {% csrf_token %}
+    <div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+        <div class="card-body overflow-x-auto lh-base">
+            <h4 class="card-title fs-4 mb-3">
+                プロファイル初期登録
+            </h4>
+            <p class="card-text mb-4">
+                プロファイルの初期登録を行います。以下の情報を入力して、登録ボタンをクリックしてください。
+                <dl class="m-0 text-muted small px-2">
+                    <dt class="mb-1">注意</dt>
+                    <dd>・入力後は、ヘッダーのProfileから情報の編集が可能です。</dd>
+                    <dd>・プロファイル情報は同じ組織内で共有されます。</dd>
+                </dl>
+            </p>
+        </div>
+    </div>
+
+    <div class="card border-0 rounded-0 mb-4 p-2 pt-3 bg-white">
+        <div class="card-body overflow-x-auto">
+            <h4 class="card-title fs-4 mb-3">
+                プロファイル画像
+            </h4>
+            <p class="card-text mb-4">
+                あなたのプロファイル画像を選択してください。
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+                {% for choice in profile_image_form.profile_image %}
+                <div class="border rounded p-2">
+                    <div class="form-check text-center d-flex gap-2 align-items-center">
+                        {{ choice.tag }}
+                        <label class="form-check-label" for="{{ choice.id_for_label }}">
+                            <img src="{% static choice.data.value %}" alt="プロフィール画像"
+                                class="img-fluid rounded" style="width: 80px; height: 80px;">
+                        </label>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 rounded-0 mb-4 p-2 pt-3 bg-white">
+        <div class="card-body overflow-x-auto">
+            <h4 class="card-title fs-4 mb-3">
+                プロファイル情報
+            </h4>
+            <p class="card-text mb-4">
+                あなたの基本的なプロファイル情報を入力してください。
+            </p>
+            <div class="mb-3">
+                <div class="mb-3">
+                    {% for field in profile_input_form %}
+                        <div class="mb-3">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% for error in field.errors %}
+                            <div class="text-danger small px-3">エラー：{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 rounded-0 mb-4 p-2 pt-3 bg-white">
+        <div class="card-body overflow-x-auto">
+            <h4 class="card-title fs-4 mb-3">
+                パーソナリティ
+            </h4>
+            <p class="card-text mb-4">
+                あなたのパーソナリティ（価値観、趣味、コミュニケーション）に関する情報のうち、当てはまるものを全て選択してください。
+            </p>
+            <div class="mb-4">
+                <label class="form-label mb-0">価値観:</label>
+                <div class="d-flex flex-wrap gap-3 border p-2 rounded overflow-y-scroll" style="max-height: 100px;">
+                    {% for checkbox in personality_tag_form.value_tags %}
+                    <div class="badge text-bg-light m-1 fs-6 fw-normal">
+                        <div class="form-check d-flex gap-2 align-items-center">
+                            {{ checkbox.tag }}
+                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                # {{ checkbox.choice_label }}
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label mb-0">趣味:</label>
+                <div class="d-flex flex-wrap gap-3 border p-2 rounded overflow-y-scroll" style="max-height: 100px;">
+                    {% for checkbox in personality_tag_form.hobby_tags %}
+                        <div class="badge text-bg-light m-1 fs-6 fw-normal">
+                            <div class="form-check d-flex gap-2 align-items-center">
+                                {{ checkbox.tag }}
+                                <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                    # {{ checkbox.choice_label }}
+                                </label>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label mb-0">コミュニケーション:</label>
+                <div class="d-flex flex-wrap gap-3 border p-2 rounded overflow-y-scroll" style="max-height: 100px;">
+                    {% for checkbox in personality_tag_form.communication_tags %}
+                    <div class="badge text-bg-light m-1 fs-6 fw-normal">
+                        <div class="form-check d-flex gap-2 align-items-center">
+                            {{ checkbox.tag }}
+                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                # {{ checkbox.choice_label }}
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 rounded-0 mb-4 p-2 pt-3 bg-white">
+        <div class="card-body overflow-x-auto">
+            <h4 class="card-title fs-4 mb-3">
+                パーソナリティ診断
+            </h4>
+            <p class="card-text mb-4">
+                あなたのパーソナリティをより詳細に理解するための診断を行います。以下の質問に答えてください。
+            </p>
+            <div class="mb-3">
+                <div class="mb-3">
+                    {% for field in big_five_survey_form %}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">{{ field.label }}</label>
+                        <div class="form-check d-flex flex-wrap gap-3 border p-2 rounded overflow-y-scroll">
+                        {% for radio in field %}
+                            <div class="form-check d-flex gap-2 align-items-center">
+                            {{ radio.tag }}
+                            <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                {{ radio.choice_label }}
+                            </label>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 rounded-0 mb-4 p-2 pt-3 bg-white">
+        <div class="card-body overflow-x-auto">
+            <!--  送信ボタン -->
+            <div class="text-center my-3 mt-4 d-grid gap-2 col-12 col-md-6 mx-auto">
+                <button type="submit" 
+                    class="btn btn-lg btn-secondary py-2 px-3 prevent-double-click-button">
+                    登録する
+                </button>
+            </div>
+            <p class="text-center small text-muted">
+                ※登録後は、ヘッダーのProfileから情報の編集が可能です。
+            </p>
+        </div>
+    </div>
+
+</form>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+    Matching Group
+    {% if is_detail %}
+    Detail
+    {% else %}
+    Create New
+    {% endif %}
+{% endblock %}
+
+{% block css_js_path %}
+{% endblock %}
+
+{% block content %}
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <h4 class="card-title fs-4 mb-3">
+            マッチンググループ
+            {% if is_detail %}
+            詳細
+            {% else %}
+            新規作成
+            {% endif %}
+        </h4>
+        <form method="post" class="prevent-double-click-form  lh-lg">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                {% for field in matching_group_input_form %}
+                <div class="mb-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% for error in field.errors %}
+                    <div class="text-danger small px-3">エラー：{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label mb-0">候補者:</label>
+                <div class="d-flex flex-wrap gap-3 border p-2 rounded overflow-y-scroll" style="max-height: 80px;">
+                    {% for checkbox in matching_group_candidates_form.matching_candidates %}
+                    <div class="badge text-bg-light m-1 fs-6 fw-normal">
+                        <div class="form-check d-flex align-items-center gap-2">
+                            {{ checkbox.tag }}
+                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                # {{ checkbox.choice_label }}
+                            </label>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-muted small px-3">初期セットアップが完了している候補者がいません。</div>
+                    {% endfor %}
+                </div>
+                {# バリデーションエラー表示 #}
+                {% if matching_group_candidates_form.matching_candidates.errors %}
+                    <div class="text-danger mt-1">
+                        {% for error in matching_group_candidates_form.matching_candidates.errors %}
+                            <div class="text-danger small px-3 my-3">エラー：{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <dl class="row mt-3">
+                    <dt class="text-muted small px-3 col-3" style="width: fit-content;">
+                        注意事項:
+                    </dt>
+                    <dd class="text-muted small px-3 col-9">
+                        候補者は <strong>初期セットアップが完了している</strong> ユーザーのみ選択可能です。
+                        <br>
+                        また、<strong>二人以上の候補者を選択</strong>する必要があります。
+                    </dd>
+                </dl>
+            </div>
+
+            <!--  送信ボタン -->
+            <div class="text-center my-3 mt-4">
+                <button type="submit" 
+                    class="btn btn-lg btn-secondary py-2 px-3 prevent-double-click-button">
+                    {% if is_detail %}
+                    更新する
+                    {% else %}
+                    新規作成
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

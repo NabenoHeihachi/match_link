@@ -1,0 +1,107 @@
+<!-- ------------------------ -->
+<!-- 概要：アカウント一覧HTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}Account List{% endblock %}
+
+{% block content %}
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <h4 class="card-title fs-4 mb-3">検索条件</h4>
+        <!-- 検索フォーム -->
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            <div class="row">
+                <label for="search" class="mb-1 mx-1">検索</label>
+                <div class="col-12 col-sm-8 col-md-9">
+                    <input type="text" name="name_or_id_or_email" id="search" class="form-control prevent-forms-submit-enter p-2"
+                        maxlength="32" placeholder="ID、氏名またはメールアドレスで検索" value="{{ search_val_dict.name_or_id_or_email }}">
+                </div>
+                <div class="col-6 col-sm-4 col-md-3 d-grid mt-2 mt-sm-0 mx-auto mx-sm-0">
+                    <button type="submit" class="btn btn-secondary text-nowrap"
+                        name="button_action" value="account_search">
+                        検索
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body text-nowrap overflow-x-auto">
+        <h4 class="card-title fs-4 mb-3">メンバー一覧</h4>
+        <div class="overflow-x-scroll py-0">
+            <table class="table table-bordered table-hover text-center mt-3 caption-top py-0 my-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ユーザーID</th>
+                        <th>氏名</th>
+                        <th>メンバー番号</th>
+                        <th>セットアップ</th>
+                        <th>アクション</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for account in account_dataset %}
+                        <tr class="text-center align-middle">
+                            <td class="text-center align-middle">
+                                {{ account.account_id }}
+                                {% if request.user.account_id == account.account_id %}
+                                <span class="badge rounded-pill text-bg-primary">あなた</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ account.account_name }}
+                            </td>
+                            <td  style="width: 120px;">
+                                {{ account.member_number }}
+                            </td>
+                            <td style="width: 120px;">
+                                {% if account.is_setup_completed %}
+                                    <span class="badge rounded-pill text-bg-primary">完了</span>
+                                {% else %}
+                                    <span class="badge rounded-pill text-bg-secondary">未完了</span>
+                                {% endif %}
+                            </td>
+                            <td style="width: 200px;">
+                                <form method="post">
+                                    <a href="{% url 'app_account:member_detail' account.id %}"
+                                        class="btn btn-outline-primary text-nowrap mx-1 my-2 px-3">
+                                        詳細
+                                    </a>
+                                    {% csrf_token %}
+                                    <input type="hidden" name="account_id" value="{{account.id}}">
+                                    
+                                    <button type="submit" class="btn btn-outline-danger text-nowrap mx-1 my-2 px-3"
+                                        name="button_action" value="account_delete"
+                                        onclick="return confirm('ユーザーアカウント「{{ account.account_id }}」を削除しますか？');">
+                                        削除
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="text-start" colspan="5">
+                            <span class="px-2 text-secondary">
+                                {% if search_val_dict.name_or_id_or_email %}
+                                「{{ search_val_dict.name_or_id_or_email }}」に該当する
+                                {% endif %}
+                                アカウントがありません
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-body"></div>
+</div>
+{% endblock %}

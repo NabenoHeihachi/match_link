@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Matching Method Hybrid
+{% endblock %}
+
+
+{% block content %}
+<div class="card border-0 rounded-0 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <h4 class="card-title fs-4 mb-3">
+            ハイブリット型マッチング
+        </h4>
+        <p class="card-text mb-4 text-muted px-2">
+            候補者のプロフィールを確認後、
+            <strong>選択する</strong>
+            ボタンをクリックして、確定してください。
+        </p>
+        
+        <div class="">
+            <div class="mb-4" style="min-width: 1000px;">
+                <div id="carouselMatchingIndicators" class="carousel slide">
+                    <div class="carousel-inner" >
+                        {% for candidate_data in candidate_dataset %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}" >
+                            <img src="{% static 'img/profile/card_bg.png' %}" class="d-block w-100" alt="Card Background" style="min-height: 800px;">
+                            <div class="carousel-caption d-block">
+                                <div class="card shadow border border-light-subtle rounded-4 overflow-x-hidden overflow-y-scroll my-3" style="max-width: 600px; margin: auto; max-height: 700px;">
+                                    <div class="card-body text-center p-4 bg-light">
+                                        <img src="{% static candidate_data.profile.profile_image %}" alt="Profile Image"
+                                            class="rounded-circle mb-3 shadow" style="width: 160px; height: 160px; object-fit: cover;">
+                                        <h4 class="fw-bold mb-1">{{ candidate_data.account.account_name }}</h4>
+                                        <p class="text-muted mb-2">メンバー番号: {{ candidate_data.account.member_number }}</p>
+                                        <p class="text-muted">{{ candidate_data.profile.age|default:'-' }}歳</p>
+                                    </div>
+
+                                    <div class="card-body p-4">
+                                        <dl class="row mb-3 text-start overflow-y-scroll" style="max-height: 220px;">
+                                            <dt class="col-4 fw-bold text-muted">マッチ度</dt>
+                                            <dd class="col-8 overflow-y-scroll" style="max-height: 50px;">
+                                                <span class="badge {% if forloop.first %}bg-primary{% else %}bg-secondary{% endif %} fs-6 ">
+                                                    {{ forloop.counter }}/{{ candidate_dataset|length }}位
+                                                </span>
+
+                                                <span class="badge bg-secondary fs-6 ">
+                                                    {{ candidate_data.match_score|floatformat:2 }}%
+                                                </span>
+                                            </dd>
+
+                                            <dt class="col-4 fw-bold text-muted">自己紹介</dt>
+                                            <dd class="col-8 overflow-y-scroll" style="max-height: 50px;">
+                                                {{ candidate_data.profile.self_introduction|default:'-' }}
+                                            </dd>
+
+                                            <dt class="col-4 fw-bold text-muted">役職・所属</dt>
+                                            <dd class="col-8 overflow-y-scroll" style="max-height: 50px;">
+                                                {{ candidate_data.profile.position|default:'-' }}
+                                            </dd>
+
+                                            <dt class="col-4 fw-bold text-muted">最終学歴</dt>
+                                            <dd class="col-8 overflow-y-scroll" style="max-height: 50px;">
+                                                {{ candidate_data.profile.final_education|default:'-' }}
+                                            </dd>
+
+                                            <dt class="col-4 fw-bold text-muted">特技・スキル</dt>
+                                            <dd class="col-8 overflow-y-scroll" style="max-height: 50px;">
+                                                {{ candidate_data.profile.special_skills|default:'-' }}
+                                            </dd>
+
+                                            <dt class="col-4 fw-bold text-muted">一緒に働きたい人物像</dt>
+                                            <dd class="col-8 overflow-y-scroll" style="max-height: 50px;">
+                                                {{ candidate_data.profile.preferred_partner_description|default:'-' }}
+                                            </dd>
+                                        </dl>
+
+                                        <!--  送信ボタン -->
+                                        <div class="text-center my-3 mt-4 d-grid gap-2 col-12 col-md-6 mx-auto">
+                                            <form action="" method="post" class="prevent-double-click-form">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="candidate_account_id" value="{{ candidate_data.account.account_id }}">
+                                                <input type="hidden" name="match_score" value="{{ candidate_data.match_score }}">
+                                                <button type="submit" 
+                                                    class="btn btn-lg btn-secondary py-2 px-4 custom-loading-overlay prevent-double-click-button"
+                                                    onclick="return window.confirm('{{ candidate_data.account }}さんを選択しますか？');">
+                                                    選択する
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselMatchingIndicators" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselMatchingIndicators" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_js_path %}
+    <script src="{% static 'js/spinner_overlay.js' %}"></script>
+{% endblock %}

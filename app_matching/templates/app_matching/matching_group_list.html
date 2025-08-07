@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+    Matching Group List
+{% endblock %}
+
+{% block css_js_path %}
+{% endblock %}
+
+{% block content %}
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body text-nowrap overflow-x-auto">
+        <h1 class="card-title fs-2 mb-4">マッチング一覧</h1>
+        <!-- 検索フォーム -->
+        <form method="post" class="mb-4 col-12 col-sm-8 col-md-9 form-floating">
+            {% csrf_token %}
+            <input type="text" name="search_keyword" class="form-control " 
+                id="floatingInputValue" placeholder="例）XXXX" value="{{ search_keyword }}">
+            <label for="floatingInputValue" class="px-4 text-secondary">キーワードで検索</label>
+            <input type="hidden" name="action" value="search">
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body text-nowrap overflow-x-auto">
+        <h2 class="card-title fs-4 mb-3">あなたが対象のマッチング一覧</h2>
+        <p class="text-secondary small mb-1 px-2">
+            ＊以下のマッチング一覧は、あなたが対象のマッチンググループです。
+            <strong>マッチングを開始</strong>
+            ボタンをクリックして、マッチングを開始してください。
+        </p>
+        <div class="overflow-x-scroll py-0">
+            <table class="table table-hover text-center mt-3 caption-top py-0 my-0">
+                <thead>
+                    <tr>
+                        <th>タイトル</th>
+                        <th>作成者</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for group in your_matching_group_dataset %}
+                        <tr class="text-center align-middle">
+                            <td class="text-center align-middle">
+                                <span class="d-inline-block text-truncate text-center align-middle" style="max-width: 460px;">
+                                    <a href="{% url 'app_matching:detail' group.group_id %}" 
+                                        class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                    {{ group.group_name }}
+                                    </a>
+                                </span>
+                            </td>
+                            <td class="text-center align-middle">{{ group.owner_account }}</td>
+                            <td style="width: 300px;">
+                                <a href="{% url 'app_matching:pre_confirm' group.group_id %}"
+                                    class="btn btn-primary text-nowrap mx-1 my-2 px-3">
+                                    マッチングを開始
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="text-start py-3" colspan="4">
+                            <span class="text-secondary">
+                                {% if search_keyword %}
+                                「{{ search_keyword }}」に該当する
+                                {% endif %}
+                                あなたが対象のマッチンググループがありません
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-body"></div>
+</div>
+
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body text-nowrap overflow-x-auto">
+        <h2 class="card-title fs-4 mb-3">進行中のマッチング一覧</h2>
+        <p class="text-secondary small mb-1 px-2">
+            ＊進行中のマッチンググループは、マッチングが完了するまで表示されます。
+        </p>
+        <div class="overflow-x-scroll py-0">
+            <table class="table table-hover text-center mt-3 caption-top py-0 my-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>タイトル</th>
+                        <th>対象</th>
+                        <th>作成者</th>
+                        <th>アクション</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for group in matching_group_dataset %}
+                        <tr class="text-center align-middle">
+                            <td>{{ group.group_id }}</td>
+                            <td>
+                                <span class="d-inline-block text-truncate" style="max-width: 350px;">
+                                    {{ group.group_name }}
+                                </span>
+                            </td>
+                            <td>{{ group.target_user }}</td>
+                            <td>{{ group.owner_account }}</td>
+                            <td style="width: 200px;">
+                                <form method="post">
+                                    <a href="{% url 'app_matching:detail' group.group_id %}"
+                                        class="btn btn-outline-primary text-nowrap mx-1 my-2 px-3">
+                                        詳細
+                                    </a>
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="group_id" value="{{ group.group_id }}">
+
+                                    <button type="submit" class="btn btn-outline-danger text-nowrap mx-1 my-2 px-3"
+                                        name="button_action" value="delete"
+                                        onclick="return confirm('マッチンググループ「{{ group.group_id }}」を削除しますか？');">
+                                        削除
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="text-start py-3" colspan="5">
+                            <span class="text-secondary">
+                                {% if search_keyword %}
+                                「{{ search_keyword }}」に該当する
+                                {% endif %}
+                                マッチンググループがありません
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-body"></div>
+</div>
+
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body text-nowrap overflow-x-auto">
+        <h2 class="card-title fs-4 mb-3">過去のマッチング一覧</h2>
+        <p class="text-secondary small mb-1 px-2">
+            ＊過去のマッチンググループは、マッチングが完了した後に表示されます。
+        </p>
+        <div class="overflow-x-scroll py-0">
+            <table class="table table-hover text-center mt-3 caption-top py-0 my-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>タイトル</th>
+                        <th>対象</th>
+                        <th>作成者</th>
+                        <th>アクション</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for group in matched_group_dataset %}
+                        <tr class="text-center align-middle">
+                            <td>{{ group.group_id }}</td>
+                            <td>
+                                <span class="d-inline-block text-truncate" style="max-width: 350px;">
+                                    {{ group.group_name }}
+                                </span>
+                            </td>
+                            <td>{{ group.target_user }}</td>
+                            <td>{{ group.owner_account }}</td>
+                            <td style="width: 200px;">
+                                <form method="post">
+                                    <a href="{% url 'app_matching:detail' group.group_id %}"
+                                        class="btn btn-outline-primary text-nowrap mx-1 my-2 px-3">
+                                        詳細
+                                    </a>
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="group_id" value="{{ group.group_id }}">
+
+                                    <button type="submit" class="btn btn-outline-danger text-nowrap mx-1 my-2 px-3"
+                                        name="button_action" value="delete"
+                                        onclick="return confirm('マッチンググループ「{{ group.group_id }}」を削除しますか？');">
+                                        削除
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="text-start py-3" colspan="5">
+                            <span class="text-secondary">
+                                {% if search_keyword %}
+                                「{{ search_keyword }}」に該当する
+                                {% endif %}
+                                マッチンググループがありません
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-body"></div>
+</div>
+{% endblock %}

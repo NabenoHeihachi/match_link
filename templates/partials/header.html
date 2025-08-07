@@ -1,0 +1,114 @@
+{% load static %}
+<header class="w-100 m-0 p-0 bg-light bg-gradient bg-light border-bottom px-3">
+    <div class="d-flex flex-column flex-md-row align-items-center pb-3">
+        <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
+            <img src="{% static 'img/base_icon.png' %}" alt="Logo" width="38" height="38"
+                class="d-inline-block align-text-top img-fluid mx-1">
+            <span class="fs-4">MATCH LINK</span>
+        </a>
+
+        <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+            {% if request.user.is_authenticated %}
+            <ul class="navbar-nav flex-row gap-3">
+                <li class="nav-item dropdown position-relative">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Matching
+                    </a>
+                    <ul class="dropdown-menu position-absolute z-3">
+                        <li><a class="dropdown-item" href="{% url 'app_matching:list' %}">マッチング一覧</a></li>
+                        <li><a class="dropdown-item" href="{% url 'app_matching:create' %}">マッチング作成</a></li>
+                        <li><a class="dropdown-item" href="{% url 'app_matching:result_list' %}">マッチング結果一覧</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown position-relative">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Profile
+                    </a>
+                    <ul class="dropdown-menu position-absolute z-3">
+                        <li><a class="dropdown-item" href="{% url 'app_profile:profile' %}">プロファイル</a></li>
+                        <li><a class="dropdown-item" href="{% url 'app_profile:personality' %}">パーソナリティ</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown position-relative">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Account
+                    </a>
+                    <ul class="dropdown-menu position-absolute z-3">
+                        <li class="py-1 px-2 text-center fw-bold">
+                        {{ request.user.account_name }}
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#LogoutModal">ログアウト</a></li>
+                        <li><a class="dropdown-item" href="{% url 'app_account:control' %}">アカウント管理</a></li>
+                        {% if request.user.auth_code == "0" %}
+                        <li><a class="dropdown-item" href="{% url 'app_account:member_list' %}">メンバー一覧</a></li>
+                        <li><a class="dropdown-item" href="{% url 'app_account:member_create' %}">メンバー作成</a></li>
+                        <li><a class="dropdown-item" href="{% url 'app_account:organization' %}">組織管理</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+
+                {% if request.user.is_staff %}
+                <li class="nav-item dropdown position-relative">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Admin
+                    </a>
+                    <ul class="dropdown-menu position-absolute z-3">
+                        <li><a class="dropdown-item" href="{% url 'admin:index' %}">ダッシュボード</a></li>
+                        <li><a class="dropdown-item" href="{% url 'app_account:admin_payment' %}">現金支払管理</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+            {% else %}
+            <ul class="navbar-nav flex-row gap-4">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'app_document:index' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'app_document:pricing' %}">Pricing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'app_account:login' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'app_account:signup' %}">Create Organization</a>
+                </li>
+            </ul>
+            {% endif %}
+        </nav>
+    </div>
+    {% if request.user.is_authenticated %}
+    <!-- ------------------------ -->
+    <!-- ログアウトモーダルHTML -->
+    <!-- ------------------------ -->
+    <div class="modal fade" id="LogoutModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p class="fs-5 text-center align-middle">
+                        <strong>{{ request.user.account_name }}</strong>さん、ログアウトしますか？
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <form action="{% url 'app_account:logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-secondary">
+                                ログアウト
+                            </button>
+                        </form>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">戻る</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</header>

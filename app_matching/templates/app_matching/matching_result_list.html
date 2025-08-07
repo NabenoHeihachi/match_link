@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+    Matching Group Result List
+{% endblock %}
+
+{% block css_js_path %}
+{% endblock %}
+
+{% block content %}
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white lh-lg">
+    <div class="card-body overflow-x-auto">
+        <h4 class="card-title fs-4 mb-3">
+            マッチンググループ結果一覧
+        </h4>
+        <div class="overflow-x-scroll py-2 my-3">
+            <table class="table table-hover text-center mt-3 caption-top py-0 my-0">
+                <thead>
+                    <tr>
+                        <th style="width: 140px;">マッチングID</th>
+                        <th>名称</th>
+                        <th>投票者</th>
+                        <th style="width: 140px;">マッチング方法</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for result_data in matching_result_dataset %}
+                        <tr class="text-center align-middle">
+                            <td>{{ result_data.matching_group.group_id }}</td>
+                            <td>
+                                <span class="d-inline-block text-truncate" style="max-width: 350px;">
+                                {{ result_data.matching_group.group_name }}
+                                </span>
+                            </td>
+                            <td>{{ result_data.voter|default:"未決定" }}</td>
+                            <td>{{ result_data.get_matching_method_display|default:"未決定" }}</td>
+                            <td>
+                                <a href="{% url 'app_matching:result_detail' result_data.result_id %}"
+                                    class="btn btn-outline-primary text-nowrap mx-1 my-2 px-3">
+                                    詳細を見る
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">結果がありません。</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+<!-- ------------------------ -->
+<!-- 概要：BACEテンプレートHTML -->
+<!-- ------------------------ -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common_custom.css' %}">
+    <link rel="stylesheet" href="{% static 'css/overwrite_custom.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'img/base_icon.png' %}" sizes="32x32">
+    <link rel="apple-touch-icon" href="{% static 'img/base_icon.png' %}">
+    {% block css_js_path %}{% endblock %} 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="若手社員の定着率を高めるためのマッチング支援システム。性格・価値観・コミュニケーションスタイルから上司・部下の相性を見える化。">
+    <meta name="keywords" content="上司ガチャ, 若手社員離職, 相性診断, チームビルディング, マッチングシステム, 上司選挙, 信頼関係構築, チーム作成">
+    <title>{% block title %}{% endblock %} - MATCH LINK</title>
+</head>
+
+<body class="m-0 p-0 w-100 overflow-x-scroll bg-light bg-gradient">
+    <div class="m-0 p-0 w-100 bg-light bg-gradient py-3 mx-auto overflow-x-scroll" style="min-width: 400px;">
+        {% include 'partials/alerts.html' %}
+        {% include 'partials/header.html' %}
+        {% include 'partials/profile_setup_alert.html' %}
+        <main class="container mx-auto m-0 p-0 w-100 bg-light bg-gradient overflow-x-auto py-3" style="min-width: 400px; min-height: 90vh">
+            {% block content %}
+                <p>※コンテンツがありません。</p>
+            {% endblock %}
+        </main>
+        {% include 'partials/spinner_overlay.html' %}
+        {% include 'partials/footer.html' %}
+    </div>
+    {% block custom_js_path %}{% endblock %} 
+    <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+    <script src="{% static 'js/common_custom.js' %}"></script>
+</body>
+
+</html>

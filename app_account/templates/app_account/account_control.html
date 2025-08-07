@@ -1,0 +1,173 @@
+<!-- ------------------------ -->
+<!-- 概要：アカウント管理画面 -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %} 
+Account Control
+{% endblock %}
+
+{% block content %}
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <!-- タイトル -->
+        <h4 class="card-title fs-4 mb-3">
+            アカウント
+        </h4>
+        <table class="table table-hover ">
+            <tbody>
+                <tr>
+                    <th  style="width: 150px;">アカウントID</th>
+                    <td>{{ request.user.account_id }}</td>
+                </tr>
+
+                <tr>
+                    <th  style="width: 150px;">権限</th>
+                    <td>
+                        {% for auth_code_name, auth_code in account_auth_code_dict.items %}
+                            {% if request.user.auth_code == auth_code %}
+                                {{ auth_code_name }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th  style="width: 150px;">氏名</th>
+                    <td>
+                        {{ request.user.account_name|default:'-' }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th  style="width: 150px;">最終ログイン</th>
+                    <td>
+                        {% if request.user.last_login %}
+                        {{ request.user.last_login|date:"Y年n月j日 H時i分s秒" }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <!-- タイトル -->
+        <h4 class="card-title fs-4 mb-3">
+            組織
+        </h4>
+        <table class="table table-hover ">
+            <tbody>
+                <tr>
+                    <th  style="width: 150px;">組織ID</th>
+                    <td>{{ request.user.organization.organization_id }}</td>
+                </tr>
+
+                <tr>
+                    <th  style="width: 150px;">組織名</th>
+                    <td>
+                        {{ request.user.organization.organization_name }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th  style="width: 150px;">組織概要</th>
+                    <td>{{ request.user.organization.organization_description|default:'-' }}</td>
+                </tr>
+
+                <tr>
+                    <th  style="width: 150px;">プラン</th>
+                    <td>{{ request.user.organization.subscription.subscription_name|default:'Free' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <!-- タイトル -->
+        <h4 class="card-title fs-4 mb-3">
+            パスワード変更
+        </h4>
+        <table class="table table-hover table-bordered">
+            <tbody>
+                <tr>
+                    <th  style="width: 150px;">アクション</th>
+                    <td class="px-3">
+                        <form method="post">
+                            {% csrf_token %}
+                            <!-- パスワード -->
+                            <div class="my-1">
+                                <label for="bf_new_password" class="form-label">新しいパスワード</label>
+                                <input type="password" class="form-control prevent-forms-submit-enter" id="bf_new_password"
+                                    name="bf_new_password" minlength="8" maxlength="64" placeholder="新しいパスワード" style="max-width: 500px;" required>
+                            </div>
+                            <div class="my-1">
+                                <label for="bf_new_password_confirm" class="form-label">新しいパスワード（確認証）</label>
+                                <input type="password" class="form-control prevent-forms-submit-enter" id="bf_new_password_confirm"
+                                    name="bf_new_password_confirm" minlength="8" maxlength="64" placeholder="新しいパスワード（確認証）" style="max-width: 500px;" required>
+                            </div>
+                            <p class="text-secondary my-2">
+                                パスワードは英字・数字・記号（!?()@）をそれぞれ1つ以上含み、8〜256文字で構成してください。
+                            </p>
+                            <button type="submit" class="btn btn-outline-primary text-nowrap mx-1 my-2 px-3"
+                                    name="button_action" value="change_password"
+                                    onclick="return window.confirm('パスワードを更新しますか？');"
+                                    >
+                                    更新する
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card border-0 rounded-0 mt-2 mb-4 p-2 bg-white">
+    <div class="card-body">
+        <h4 class="card-title fs-4 mb-3">
+            アクティビティ一覧（直近{{ account_activity_dataset.count }}件）
+        </h4>
+        <div class="overflow-x-scroll py-0">
+            <table class="table table-hover text-center py-0 my-0">
+                <thead class="text-nowrap">
+                    <tr>
+                        <th>試行日時</th>
+                        <th>ユーザーID</th>
+                        <th>リクエストパス</th>
+                        <th>エージェント</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for account_activity_data in account_activity_dataset %}
+                    <tr class="text-center align-middle text-nowrap">
+                        <td style="width: 140px;">{{ account_activity_data.attempt_time | date:"Y年m月d日 H時i分s秒" }}</td>
+                        <td>{{ account_activity_data.username }}</td>
+                        <td>{{ account_activity_data.path_info }}</td>
+                        <td class="overflow-x-scroll" style="max-width: 200px;">{{ account_activity_data.user_agent }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-start text-secondary">
+                            該当するデータはありません
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-body"></div>
+</div>
+{% endblock %}

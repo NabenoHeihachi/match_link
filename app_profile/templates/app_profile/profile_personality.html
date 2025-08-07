@@ -1,0 +1,194 @@
+<!-- ------------------------ -->
+<!-- 概要：パーソナリティ管理フォームHTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+    Personality Management
+{% endblock %}
+
+{% block css_js_path %}
+{% endblock %}
+
+{% block content %}
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <h4 class="card-title fs-4 mb-3">
+            パーソナリティ
+        </h4>
+        
+        <table class="table table-hover">
+            <tbody>
+                <tr>
+                    <th class="" style="width: 160px;">価値観</th>
+                    <td>
+                        {% for value in personality_obj.value_tags.all %}
+                            <span class="badge text-bg-light m-1 fs-6 fw-normal">
+                                #{{ value.tag_name }}
+                            </span>
+                        {% empty %}
+                            -
+                        {% endfor %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th class="" style="width: 160px;">趣味</th>
+                    <td>
+                        {% for hobby in personality_obj.hobby_tags.all %}
+                            <span class="badge text-bg-light m-1 fs-6 fw-normal">
+                                #{{ hobby.tag_name }}
+                            </span>
+                        {% empty %}
+                            -
+                        {% endfor %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th class="" style="width: 160px;">コミュニケーション</th>
+                    <td>
+                        {% for communication in personality_obj.communication_tags.all %}
+                            <span class="badge text-bg-light m-1 fs-6 fw-normal">
+                                #{{ communication.tag_name }}
+                            </span>
+                        {% empty %}
+                            -
+                        {% endfor %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th class="" style="width: 160px;">診断結果</th>
+                    <td>
+                        {% for trait, score in big_five_rate.items %}
+                        <dl class="row">
+                            <dt class="col-sm-5 fw-bold text-muted text-uppercase" style="max-width: 220px;">
+                                {{ trait }}
+                            </dt>
+                            <dd class="col-sm-7">{{ score }}%</dd>
+                        </dl>
+                        {% endfor %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card border-0 rounded-0 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <form method="post" class="prevent-double-click-form lh-lg" action="{% url 'app_profile:personality' %}">
+            {% csrf_token %}
+            <h4 class="card-title fs-4 mb-3">
+                パーソナリティタグ編集
+            </h4>
+            <p class="card-text mb-4">
+                パーソナリティタグ（価値観、趣味、コミュニケーション）を更新します。編集後、更新ボタンを押してください。
+            </p>
+            <div class="mb-4">
+                <label class="form-label mb-0">価値観:</label>
+                <div class="d-flex flex-wrap gap-3 border p-2 rounded overflow-y-scroll" style="max-height: 100px;">
+                    {% for checkbox in personality_tag_form.value_tags %}
+                    <div class="badge text-bg-light m-1 fs-6 fw-normal">
+                        <div class="form-check d-flex gap-2 align-items-center">
+                            {{ checkbox.tag }}
+                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                # {{ checkbox.choice_label }}
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label mb-0">趣味:</label>
+                <div class="d-flex flex-wrap gap-3 border p-2 rounded overflow-y-scroll" style="max-height: 100px;">
+                    {% for checkbox in personality_tag_form.hobby_tags %}
+                    <div class="badge text-bg-light m-1 fs-6 fw-normal">
+                        <div class="form-check d-flex gap-2 align-items-center">
+                            {{ checkbox.tag }}
+                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                # {{ checkbox.choice_label }}
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label mb-0">コミュニケーション:</label>
+                <div class="d-flex flex-wrap gap-3 border p-2 rounded overflow-y-scroll" style="max-height: 100px;">
+                    {% for checkbox in personality_tag_form.communication_tags %}
+                    <div class="badge text-bg-light m-1 fs-6 fw-normal">
+                        <div class="form-check d-flex gap-2 align-items-center">
+                            {{ checkbox.tag }}
+                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                # {{ checkbox.choice_label }}
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!--  送信ボタン -->
+            <input type="hidden" name="action" value="update-tags">
+            <div class="text-center my-3 mt-4">
+                <button type="submit"
+                    class="btn btn-lg btn-secondary py-2 px-3 prevent-double-click-button">
+                    更新する
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="card border-0 rounded-0 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <form method="post" class="prevent-double-click-form lh-lg" action="{% url 'app_profile:personality' %}">
+            {% csrf_token %}
+            <h4 class="card-title fs-4 mb-3">
+                パーソナリティ再診断
+            </h4>
+            <p class="card-text mb-4">
+                パーソナリティを再診断します。最後に再診断ボタンを押してください。
+            </p>
+            <div class="mb-3">
+                <div class="mb-3">
+                    {% for field in big_five_survey_form %}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">{{ field.label }}</label>
+                        <div class="form-check d-flex flex-wrap gap-3 border p-2 rounded overflow-y-scroll">
+                        {% for radio in field %}
+                            <div class="form-check d-flex gap-2 align-items-center">
+                            {{ radio.tag }}
+                            <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                {{ radio.choice_label }}
+                            </label>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <input type="hidden" name="action" value="re-diagnose">
+            <!--  送信ボタン -->
+            <div class="text-center my-4 py-4 d-grid gap-2 col-12 col-md-6 mx-auto">
+                <button type="submit" name="action" value="re-diagnose"
+                    class="btn btn-lg btn-secondary py-2 px-3 prevent-double-click-button">
+                    再診断する
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

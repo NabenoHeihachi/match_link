@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css_js_path %}
+{% endblock %}
+
+{% block title %}Pricing{% endblock %}
+
+{% block content %}
+<div class="pricing-header p-3 pb-md-4 mx-auto text-center mb-4">
+  <h1 class="display-4 fw-normal text-body-emphasis">Pricing</h1>
+  <p class="fs-5 text-body-secondary my-4">
+    MATCH LINKでは、チームや組織のニーズに合わせた3つのプランをご用意しています。<br>
+    いずれのプランも、<strong>Organization Account（管理者）単位</strong>でのご契約となり、登録されたメンバーアカウントは無料でご利用いただけます。
+  </p>
+</div>
+<div class="row row-cols-1 row-cols-md-3 mb-3 text-center my-4 pb-4 w-100 overflow-x-hidden">
+  <div class="col">
+    <div class="card mb-4 rounded-3 shadow-sm border-primary">
+      <div class="card-header py-3 text-bg-primary border-primary">
+        <h4 class="my-0 fw-normal">Free</h4>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">まずは無料で試したい方へ</h5>
+        <h1 class="card-title  my-3">
+          ¥0
+          <small class="text-body-secondary fw-light">
+            / 月
+          </small>
+        </h1>
+        <p class="card-text my-4">
+          少人数のチームや個人利用に最適です。基本的な相性分析機能をお使いいただけます。
+        </p>
+        <a href="{% url 'app_account:signup' %}?plan=free">
+          <button type="button" class="w-100 btn btn-lg btn-outline-primary">
+            Create Organization
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card mb-4 rounded-3 shadow-sm">
+      <div class="card-header py-3">
+        <h4 class="my-0 fw-normal">Standard</h4>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">中規模チーム・団体に最適</h5>
+        <h1 class="card-title my-3">
+            ¥6000
+          <small class="text-body-secondary fw-light">
+            / 月
+          </small>
+        </h1>
+        <p class="card-text my-4">
+          中規模のチームや個人利用に最適です。基本的な相性分析機能をお使いいただけます。
+        </p>
+        <a href="{% url 'app_account:signup' %}?plan=standard">
+          <button type="button" class="w-100 btn btn-lg btn-primary">
+            Create Organization
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card mb-4 rounded-3 shadow-sm">
+      <div class="card-header py-3">
+        <h4 class="my-0 fw-normal">Enterprise</h4>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">中規模以上のチームに最適</h5>
+        <h1 class="card-title  my-3">
+          ¥16000
+          <small class="text-body-secondary fw-light">
+            / 月
+          </small>
+        </h1>
+        <p class="card-text my-4">
+          大規模のチームや個人利用に最適です。基本的な相性分析機能をお使いいただけます。
+        </p>
+        <a href="{% url 'app_account:signup' %}?plan=enterprise">
+          <button type="button" class="w-100 btn btn-lg btn-primary">
+            Create Organization
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 class="display-6 text-center my-4 pt-4">Compare plans</h2>
+
+<div class="table-responsive pb-4 mb-4">
+  <table class="table table-hover text-center">
+    <thead>
+      <tr>
+        <th style="width: 34%;"></th>
+        <th style="width: 22%;">Free</th>
+        <th style="width: 22%;">Standard</th>
+        <th style="width: 22%;">Enterprise</th>
+      </tr>
+    </thead>
+    <tbody class="lh-lg">
+      <tr>
+        <th scope="row" class="text-start align-middle">相性の可視化</th>
+        <td class="align-middle">◯</td>
+        <td class="align-middle">◯</td>
+        <td class="align-middle">◯</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-start align-middle">自動マッチング</th>
+        <td class="align-middle">◯</td>
+        <td class="align-middle">◯</td>
+        <td class="align-middle">◯</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-start">投票システム</th>
+        <td class="align-middle">◯</td>
+        <td class="align-middle">◯</td>
+        <td class="align-middle">◯</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-start">AIサマリー</th>
+        <td class="align-middle">-</td>
+        <td class="align-middle">◯</td>
+        <td class="align-middle">◯</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-start">メンバー数上限</th>
+        <td class="align-middle">10</td>
+        <td class="align-middle">50</td>
+        <td class="align-middle">100</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-start">グループ数上限</th>
+        <td class="align-middle">2</td>
+        <td class="align-middle">10</td>
+        <td class="align-middle">30</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

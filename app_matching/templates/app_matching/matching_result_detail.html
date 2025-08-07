@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+    Matching Result Detail
+{% endblock %}
+
+{% block css_js_path %}
+{% endblock %}
+
+{% block content %}
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white lh-lg">
+    <div class="card-body overflow-x-auto">
+        <h4 class="card-title fs-4 mb-3">
+            マッチング結果詳細
+        </h4>
+        <div class="overflow-x-scroll py-2 my-3">
+            <table class="table table-hover">
+                <tbody>
+                    <tr>
+                        <th class="" style="width: 160px;">ID</th>
+                        <td>
+                            <span class="badge text-bg-light m-1 fs-6 fw-normal">
+                                # {{ matching_result_data.matching_group.group_id }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="" style="width: 160px;">目的</th>
+                        <td>
+                            <span class="px-2 text-body-emphasis">
+                                {{ matching_result_data.matching_group.group_name | default:"-"  }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="" style="width: 160px;">概要</th>
+                        <td>
+                            <span class="px-2 text-body-emphasis">
+                                {{ matching_result_data.matching_group.group_description | default:"-"  }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="" style="width: 160px;">投票者</th>
+                        <td>
+                            <span class="badge text-bg-light m-1 fs-6 fw-normal">
+                                # {{ matching_result_data.voter }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="" style="width: 160px;">マッチユーザー</th>
+                        <td>
+                            <span class="badge text-bg-light m-1 fs-6 fw-normal">
+                                # {{ matching_result_data.chosen_person }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="" style="width: 160px;">マッチング方法</th>
+                        <td>
+                            <span class="badge text-bg-light m-1 fs-6 fw-normal">
+                                # {{ matching_result_data.get_matching_method_display | default:"-" }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="" style="width: 160px;">マッチスコア</th>
+                        <td>
+                            <span class="px-2 text-body-emphasis">
+                                {{ matching_result_data.match_score | floatformat:2 | default:"-" }} %
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="" style="width: 160px;">
+                            サマリー
+                        </th>
+                        <td>
+                            <span class="px-2 text-body-emphasis">
+                                {{ matching_result_data.reason_summary | default:"-" }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

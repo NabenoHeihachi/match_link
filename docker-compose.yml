@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres
+    container_name: match_link_postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: match_link_django
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - ./media:/code/media
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

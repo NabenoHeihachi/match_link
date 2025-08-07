@@ -1,0 +1,11 @@
+.DS_Store
+.lurs-venv
+.env
+db.sqlite3
+__pycache__
+__pycache__/
+logs/*
+!logs/.gitkeep
+*.log
+*.pot
+*.pyc

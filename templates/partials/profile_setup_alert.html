@@ -1,0 +1,14 @@
+<!-- ---------------------------------------------- -->
+<!-- 概要：プロファイル初期セットアップアラート表示HTML -->
+<!-- ---------------------------------------------- -->
+{% if request.user.is_authenticated %}
+    {% if not request.user.is_setup_completed %}
+        <div class="alert alert-info border-0 m-0 rounded-0 py-1 text-center" role="alert">
+            <a href="{% url 'app_profile:setup' %}" class="alert-link">
+                こちら
+            </a>
+            からプロファイル初期セットアップを行ってください。
+        </div>
+    {% endif %}
+{% endif %}
+

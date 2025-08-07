@@ -1,0 +1,3 @@
+from app_profile.models.options_model import ValueTagModel, HobbyTagModel, CommunicationTagModel
+from app_profile.models.personality_model import PersonalityModel
+from app_profile.models.profile_model import ProfileModel

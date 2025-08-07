@@ -1,0 +1,153 @@
+<!-- ------------------------ -->
+<!-- 概要：アカウント組織管理画面 -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %} 
+Organization Control
+{% endblock %}
+
+{% block content %}
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <h4 class="card-title fs-4 mb-3">
+            組織
+        </h4>
+        <form method="post" class="prevent-double-click-form">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                {% for field in organization_form %}
+                <div class="mb-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% for error in field.errors %}
+                    <div class="text-danger small px-3">エラー：{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!--  送信ボタン -->
+            <div class="text-center my-3 mt-4">
+                <button type="submit" 
+                    class="btn btn-lg btn-secondary py-2 px-3 prevent-double-click-button">
+                    更新する
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <!-- タイトル -->
+        <h4 class="card-title fs-4 mb-3">
+            サブスクリプション
+        </h4>
+        <table class="table table-hover table-bordered">
+            <tbody>
+                <tr>
+                    <th class="bg-light" style="width: 160px;">プラン</th>
+                    <td>{{ request.user.organization.subscription.subscription_name|default:'Free' }}</td>
+                </tr>
+                <tr>
+                    <th class="bg-light" style="width: 160px;">有効期限</th>
+                    <td>
+                        {% if start_date and expiration_date %}
+                            {{ start_date|date:"Y年n月j日 G時i分" }} ~ {{ expiration_date|date:"Y年n月j日 G時i分" }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th class="bg-light" style="width: 160px;">概要</th>
+                    <td>{{ request.user.organization.subscription.subscription_description|default:'-' }}</td>
+                </tr>
+                <tr>
+                    <th class="bg-light" style="width: 160px;">メンバー数上限</th>
+                    <td>{{ request.user.organization.subscription.account_limit|default:'-' }}</td>
+                </tr>
+                <tr>
+                    <th class="bg-light" style="width: 160px;">投票グループ数上限</th>
+                    <td>{{ request.user.organization.subscription.matching_group_limit|default:'-' }}</td>
+                </tr>
+                <tr>
+                    <th class="bg-light" style="width: 160px;">AIサマリー</th>
+                    <td>{% if request.user.organization.subscription.is_ai_enabled %}◯{% else %}✕{% endif %}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body text-nowrap overflow-x-auto">
+        <h4 class="card-title fs-4 mb-3">支払い履歴</h4>
+        <div class="overflow-x-scroll py-0">
+            <table class="table table-bordered table-hover text-center mt-3 caption-top py-0 my-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>支払いID</th>
+                        <th>名義</th>
+                        <th>金額</th>
+                        <th>サブスクリプション</th>
+                        <th>支払い日時</th>
+                        <th>取引ID</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for payment in payment_history_dataset %}
+                        <tr class="text-center align-middle">
+                            <td class="overflow-x-auto" style="max-width: 200px;">{{ payment.id }}</td>
+                            <td>{{ payment.payment_name }}</td>
+                            <td>{{ payment.payment_amount }}円</td>
+                            <td>{{ payment.subscription.subscription_name }}</td>
+                            <td>{{ payment.payment_date|date:"Y年n月j日 G時i分" }}</td>
+                            <td class="overflow-x-auto" style="max-width: 200px;">{{ payment.transaction_id | default:"-" }}</td>
+                        </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="text-start" colspan="6">
+                            <span class="px-2 text-secondary">
+                                支払い履歴はありません
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-body"></div>
+</div>
+
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body text-nowrap overflow-x-auto">
+        <h4 class="card-title fs-4 mb-3">退会する</h4>
+        <p class="text-secondary">
+            退会すると、組織に所属する全てのメンバーが退会となります。<br>
+            退会後は、組織に関する情報は全て削除されます。
+        </p>
+        <form method="post" action="{% url 'app_account:organization_delete' %}" class="prevent-double-click-form">
+            {% csrf_token %}
+            <div class="text-center my-3 mt-4">
+                <button type="submit" 
+                    class="btn btn-lg btn-danger py-2 px-3 custom-loading-overlay prevent-double-click-button"
+                    onclick="return confirm('本当に退会しますか？\n退会後は組織に関する情報は全て削除されます。')">
+                    退会する
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_js_path %}
+    <script src="{% static 'js/spinner_overlay.js' %}"></script>
+{% endblock %}

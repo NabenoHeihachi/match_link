@@ -1,0 +1,47 @@
+<!-- ------------------------ -->
+<!-- 概要：サイトフッターHTML -->
+<!-- ------------------------ -->
+{% load static %}
+<footer class="w-100 overflow-x-auto m-0 py-2 px-4 bg-light bg-gradient pt-4 my-md-5 pt-md-5 border-top mx-auto" style="min-width: 400px;">
+    <div class="row">
+        <div class="col-12 col-md text-center">
+        <img class="mb-2 img-fluid mx-auto" src="{% static 'img/base_icon.png' %}" alt="" width="64" height="64">
+        <small class="d-block mb-3 text-body-secondary">&copy; 2025 MATCH LINK.</small>
+        </div>
+        <div class="col-6 col-md">
+        <h5>Features</h5>
+        <ul class="list-unstyled text-small">
+            <li class="mb-1">
+                <a class="link-secondary text-decoration-none" 
+                    href="/#setting-profile">
+                    Setting Profile
+                </a>
+            </li>
+            <li class="mb-1">
+                <a class="link-secondary text-decoration-none" 
+                    href="/#matching-methods">
+                    Matching Methods
+                </a>
+            </li>
+            <li class="mb-1">
+                <a class="link-secondary text-decoration-none" 
+                    href="{% url 'app_document:pricing' %}">
+                    Pricing
+                </a>
+            </li>
+        </ul>
+        </div>
+        <div class="col-6 col-md">
+        <h5>Manual</h5>
+        <ul class="list-unstyled text-small">
+            <li class="mb-1">
+                <a class="link-secondary text-decoration-none" 
+                    href="{% url 'app_document:manual' %}">
+                    User Manual
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</footer>

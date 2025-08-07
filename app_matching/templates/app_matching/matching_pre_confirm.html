@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Matching Group Confirm
+{% endblock %}
+
+{% block content %}
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto lh-base">
+        <h4 class="card-title fs-3 mb-3">
+            マッチングを開始
+        </h4>
+        <p class="card-text mb-4 text-muted px-2">
+            マッチングを開始する前に、
+            <strong>マッチング情報の確認</strong>
+            と
+            <strong>マッチング方法を選択</strong>
+            し、開始するをクリックしてください。
+            <dl class="m-0 text-muted small px-2">
+                <dt class="mb-1">注意</dt>
+                <dd>・マッチング結果はヘッダーのMatchingから確認が可能です。</dd>
+                <dd>・確定後は、マッチング結果の編集はできません。</dd>
+            </dl>
+        </p>
+    </div>
+</div>
+
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white  lh-lg">
+    <div class="card-body overflow-x-auto ">
+        <h4 class="card-title fs-4 mb-3">
+            マッチング情報の確認
+        </h4>
+        <p class="text-muted mb-1 px-2">
+            マッチングを開始する前に、以下の情報を確認してください。
+        </p>
+        <div class="overflow-x-scroll py-2 my-3">
+            <table class="table table-hover">
+                <tbody>
+                    <tr>
+                        <th class="" style="width: 160px;">マッチングID</th>
+                        <td>
+                            <span class="badge text-bg-light m-1 fs-6 fw-normal">
+                                # {{ matching_group_data.group_id }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="" style="width: 160px;">名称</th>
+                        <td class="">
+                            <div class="px-2 text-light-emphasis">
+                                {{ matching_group_data.group_name }}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="" style="width: 160px;">概要</th>
+                        <td>
+                            <div class="px-2 text-light-emphasis">
+                                {{ matching_group_data.group_description | default:"-" }}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="" style="width: 160px;">タイプ</th>
+                        <td>
+                            <span class="badge text-bg-light m-1 fs-6 fw-normal">
+                                # {{ matching_group_data.get_matching_type_display | default:"-" }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="" style="width: 160px;">対象者</th>
+                        <td>
+                            <span class="badge text-bg-light m-1 fs-6 fw-normal">
+                                    # {{ matching_group_data.target_user.account_name }}
+                                    （メンバーID：{{ matching_group_data.target_user.member_number }}）
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="" style="width: 160px;">候補者一覧</th>
+                        <td>
+                            {% for value in matching_group_data.matching_candidates.all %}
+                                <span class="badge text-bg-light m-1 fs-6 fw-normal">
+                                    # {{ value.account_name }}（メンバーID：{{ value.member_number }}）
+                                </span>
+                            {% empty %}
+                                -
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 rounded-0 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <h4 class="card-title fs-4 mb-4">
+            マッチング方法の選択
+        </h4>
+
+        <hr >
+
+        <div class="my-4">
+            <h4 class="card-title fs-6 px-2 fw-bold my-3">
+                マッチング方法について
+            </h4>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 border-primary">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">ハイブリット（おすすめ）</h5>
+                            <p class="card-text">
+                                性格や価値観に基づいて、最適な相手の候補者リストを提案します。
+                                その後、リストから、プロフィール情報を参考に相手を決定します。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">自動マッチング</h5>
+                            <p class="card-text">
+                                性格や価値観に基づいて、最適な相手を自動で選択します。
+                                候補者のプロフィール情報は表示されません。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">手動マッチング</h5>
+                            <p class="card-text">
+                                候補者のプロフィール情報を確認し、最適な相手を選択します。
+                                全ての候補者のプロフィール情報が表示されます。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="my-4">
+            <h4 class="card-title fs-6 px-2 fw-bold my-3">
+                マッチング方法の選択
+            </h4>
+            <p class="card-text px-3 text-muted">
+                マッチング方法を選択してください。選択後、<strong>マッチングを開始</strong>ボタンをクリックしてください。
+            </p>
+
+            <form method="post" class="prevent-double-click-form  lh-lg px-3 my-4 py-4">
+                {% csrf_token %}
+
+                <div class="form-floating mb-3 col-12 col-md-7 mx-auto">
+
+                    {{ matching_method_form.matching_method }}
+                    <label for="floatingSelect">
+                        マッチング方式を選択
+                    </label>
+                    {% for error in matching_method_form.matching_method.errors %}
+                        <div class="text-danger small">
+                            エラー：{{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="text-center my-3 mt-4 d-grid gap-2 col-12 col-md-7 mx-auto">
+                    <button type="submit" 
+                        class="btn btn-lg btn-primary py-2 px-3 custom-loading-overlay prevent-double-click-button"
+                        onclick="return window.confirm('選択したマッチング方法で開始しますか？');">
+                        マッチングを開始
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_js_path %}
+    <script src="{% static 'js/spinner_overlay.js' %}"></script>
+{% endblock %}

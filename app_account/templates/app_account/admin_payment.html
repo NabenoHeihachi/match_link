@@ -1,0 +1,72 @@
+<!-- ------------------------ -->
+<!-- 概要：アドミン支払い管理フォームHTML -->
+<!-- ------------------------ -->
+{% extends 'base.html' %}
+{% load static %}
+{% block csslink %}
+
+{% endblock %}
+
+{% block title %}
+    Admin Payment Management
+{% endblock %}
+
+{% block css_js_path %}
+{% endblock %}
+
+{% block content %}
+<div class="card border-0 rounded-0 mt-3 mb-4 p-2 pt-3 bg-white">
+    <div class="card-body overflow-x-auto">
+        <h4 class="card-title fs-4 mb-3">
+            現金支払い管理
+        </h4>
+        <form method="post" class="prevent-double-click-form">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                {% for field in payment_history_form %}
+                <div class="mb-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% for error in field.errors %}
+                    <div class="text-danger small px-3">エラー：{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                <label for="organization_id" class="form-label">組織</label>
+                <select name="organization_id" id="organization_id" class="form-select">
+                    <option value="" selected disabled>選択してください</option>
+                    {% for organization in organization_dataset %}
+                    <option value="{{ organization.organization_id }}">
+                        ID: {{ organization.organization_id }} | 名称: {{ organization.organization_name }} | メール: {{ organization.organization_email|default:"-" }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="subscription_id" class="form-label">サブスクリプション</label>
+                <select name="subscription_id" id="subscription_id" class="form-select">
+                    <option value="" selected disabled>選択してください</option>
+                    {% for subscription in subscription_dataset %}
+                    <option value="{{ subscription.subscription_id }}">
+                        名称: {{ subscription.subscription_name }} | 金額: {{ subscription.subscription_price }}円
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!--  送信ボタン -->
+            <div class="text-center my-3 mt-4">
+                <button type="submit" 
+                    class="btn btn-lg btn-secondary py-2 px-3 prevent-double-click-button">
+                    登録する
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

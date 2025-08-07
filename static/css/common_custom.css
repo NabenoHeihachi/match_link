@@ -1,0 +1,41 @@
+.custom-animation-fade-out {
+    animation: CustomAnimationfadeOut 4s forwards;
+}
+
+.custom-animation-fade-out-2s {
+    animation: CustomAnimationfadeOut 2.5s forwards;
+}
+
+/* アニメーション定義 */
+@keyframes CustomAnimationfadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+        display: none;
+    }
+}
+
+#custom-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1050;
+}
+
+.custom-overlay-background {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+}
+
+.custom-overlay-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

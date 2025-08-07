@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css_js_path %}
+<meta http-equiv="Cache-Control" content="no-store" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+{% endblock %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="col-xl-10 px-4 py-5 mx-auto">
+    <div class="row align-items-center py-5">
+        <div class="col-lg-7 text-center text-lg-start mb-3">
+            <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">
+                Login Form
+            </h1>
+            <p class="col-lg-10 fs-5">
+                作成した組織管理者アカウントもしくは、割り振られた組織メンバーアカウントでログインしてください。
+            </p>
+            <p class="col-lg-10 fs-5">
+                組織を新たに作成される方は
+                <a href="{% url 'app_account:signup' %}">
+                    こちら
+                </a>
+                から、
+                割り振られたメンバーアカウントはない方は組織管理者にお問い合わせください。
+            </p>
+        </div>
+        <div class="col-md-10 mx-auto col-lg-5">
+            <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary prevent-double-click-form" 
+                method="post" action="{% url 'app_account:login' %}" autocomplete="off">
+                {% csrf_token %}
+                {% if created_account_id %}
+                    <p class="text-success">アカウントIDは自動生成されました。お間違えのないよう注意してください。IDは以下の通りです。</p>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control is-valid" 
+                            id="floatingInput2" placeholder="Account ID" 
+                            name="account_id" minlength="8" maxlength="256" 
+                            value="{{ created_account_id }}" readonly required>
+                        <label for="floatingInput2">Account ID</label>
+                    </div>
+                {% else %}
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" 
+                            id="floatingInput" placeholder="Account ID" 
+                            name="account_id" minlength="8" maxlength="256" required>
+                        <label for="floatingInput">Account ID</label>
+                    </div>
+                {% endif %}
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="account_password" minlength="8" maxlength="256" required>
+                    <label for="floatingPassword">Password</label>
+                </div>
+                <div class="checkbox mb-3">
+                    <label>
+                        <input type="checkbox" class="form-check-input" name="account_terms_agreement" value="agree" required> I agree to the terms
+                    </label>
+                </div>
+                <button class="w-100 btn btn-lg btn-primary prevent-double-click-button" type="submit">
+                    Login
+                </button>
+                <hr class="my-4">
+                <small class="text-body-secondary">By clicking Login, you agree to the terms of use.</small>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
